@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Speaking Game</title>
-    <link rel="icon" href="pics/icon.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="pics/icon.png" />
+    <link rel="stylesheet" href="style.css" />
 
     <script src="script.js" defer></script>
-</head>
-<body>
-    
+  </head>
+  <body>
     <h1 class="no-topic" id="topic">Press the button to pick a topic !</h1>
     <button class="btn-pick" onclick="getTopic()">Get Topic</button>
-    <h2 class="timer ">02:00</h2>
-    <button class="btn-pause">Pause</button>
-    
-    
-</body>
+    <h2 class="timer" id="timer">02:00</h2>
+    <button class="btn-pause" id="btn-pause">Pause</button>
+    <section class="time-settings">
+      <label for="time-amount">Time in seconds</label>
+      <input type="number" id="time-amount" max="3600" />
+    </section>
+  </body>
 </html>

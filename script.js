@@ -1,17 +1,64 @@
+const MAX_SECONDS = 3600;
 let htmlTopic = document.getElementById("topic");
+let timerIntervalID;
+let txtTimerSettings = document.getElementById("time-amount");
+let lblTimer = document.getElementById("timer");
+let btnPause = document.getElementById("btn-pause");
+prePareAndGetFromStorage();
 
+function prePareAndGetFromStorage() {
+  let storageTimer = localStorage.getItem("lblTimer");
+  if (storageTimer) {
+    lblTimer.textContent = storageTimer;
+  }
+}
+
+txtTimerSettings.addEventListener("input", () => {
+  let totalSeconds = parseInt(txtTimerSettings.value) || 0;
+  if (timerIntervalID) clearInterval(timerIntervalID);
+  lblTimer.style.color = "ff6b6b";
+  setTimerSeconds(totalSeconds);
+  localStorage.setItem("lblTimer", lblTimer.textContent);
+});
+function setTimerSeconds(totalSeconds) {
+  if (totalSeconds > MAX_SECONDS) {
+    txtTimerSettings.value = "";
+    lblTimer.textContent = "02:00";
+    return;
+  }
+  if (totalSeconds === 0) {
+    lblTimer.textContent = "02:00";
+    return;
+  }
+
+  let minutes = Math.floor(totalSeconds / 60);
+  let seconds = totalSeconds % 60;
+
+  lblTimer.textContent =
+    String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+}
+
+btnPause.addEventListener("click", toggleBtnPause);
+function toggleBtnPause() {
+  if (btnPause.textContent === "Pause") {
+    btnPause.textContent = "Continue";
+    clearInterval(timerIntervalID);
+    lblTimer.style.color = "#333333";
+  } else {
+    btnPause.textContent = "Pause";
+    startTimer();
+  }
+}
 
 function getTopic() {
-    console.log(htmlTopic);
-    
-    htmlTopic.innerHTML = getRandomTopic();
+  htmlTopic.innerHTML = getRandomTopic();
 
-
+  start();
 }
 
 function getRandomTopic() {
-    let size = speakingQuestions.length;
-    return speakingQuestions[ getRandomIntInclusive(0, size - 1) ]
+  let size = speakingQuestions.length;
+  return speakingQuestions[getRandomIntInclusive(0, size - 1)];
 }
 
 function getRandomIntInclusive(min, max) {
@@ -20,9 +67,50 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+function timerToSeconds(timerText) {
+  let parts = timerText.split(":");
+  if (parts.length !== 2) return 0;
 
+  let minutes = parseInt(parts[0]) || 0;
+  let seconds = parseInt(parts[1]) || 0;
 
+  return minutes * 60 + seconds;
+}
 
+function getTimerSeconds() {
+  let timerContent = lblTimer.textContent;
+  return timerToSeconds(timerContent);
+}
+
+function startTimer() {
+  if (timerIntervalID) clearInterval(timerIntervalID);
+
+  let current = getTimerSeconds();
+  lblTimer.style.color = "green";
+  timerIntervalID = setInterval(() => {
+    current--;
+    setTimerSeconds(current);
+    if (current <= 0) {
+      lblTimer.style.color = "#ff6b6b";
+      clearInterval(timerIntervalID);
+    }
+  }, 1000);
+}
+
+function start() {
+  let counter = 3;
+  let timerContent = lblTimer.textContent;
+  let intervalID = setInterval(() => {
+    lblTimer.textContent = `Timer will Start in: ${counter}`;
+    counter--;
+    if(counter === -1 )
+    {      
+      lblTimer.textContent = timerContent;
+      startTimer();
+      clearInterval(intervalID);
+    }
+  }, 1000);
+}
 
 const speakingQuestions = [
   // --- Personal & Lifestyle (1-30) ---
@@ -291,5 +379,5 @@ const speakingQuestions = [
   "Do you prefer summer or winter?",
   "What is your favorite ice cream flavor?",
   "Do you sing in the shower?",
-  "What is the last photo you took on your phone?"
+  "What is the last photo you took on your phone?",
 ];
