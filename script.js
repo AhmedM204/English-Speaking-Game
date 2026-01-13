@@ -4,6 +4,7 @@ let timerIntervalID;
 let txtTimerSettings = document.getElementById("time-amount");
 let lblTimer = document.getElementById("timer");
 let btnPause = document.getElementById("btn-pause");
+let startTextIntervalID;
 prePareAndGetFromStorage();
 
 function prePareAndGetFromStorage() {
@@ -51,8 +52,8 @@ function toggleBtnPause() {
 }
 
 function getTopic() {
+  reset();
   htmlTopic.innerHTML = getRandomTopic();
-
   start();
 }
 
@@ -99,17 +100,26 @@ function startTimer() {
 
 function start() {
   let counter = 3;
+  lblTimer.style.color = "#ff6b6b";
   let timerContent = lblTimer.textContent;
-  let intervalID = setInterval(() => {
+  startTextIntervalID = setInterval(() => {
     lblTimer.textContent = `Timer will Start in: ${counter}`;
     counter--;
     if(counter === -1 )
     {      
       lblTimer.textContent = timerContent;
       startTimer();
-      clearInterval(intervalID);
+      clearInterval(startTextIntervalID);
     }
   }, 1000);
+}
+
+
+function reset() {
+  clearInterval(startTextIntervalID);
+  clearInterval(timerIntervalID);
+  prePareAndGetFromStorage();
+
 }
 
 const speakingQuestions = [
