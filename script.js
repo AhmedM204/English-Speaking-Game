@@ -9,6 +9,7 @@ prePareAndGetFromStorage();
 
 function prePareAndGetFromStorage() {
   let storageTimer = localStorage.getItem("lblTimer");
+  
   if (storageTimer) {
     lblTimer.textContent = storageTimer;
   }
@@ -93,7 +94,9 @@ function startTimer() {
     setTimerSeconds(current);
     if (current <= 0) {
       lblTimer.style.color = "#ff6b6b";
+      reset();
       clearInterval(timerIntervalID);
+
     }
   }, 1000);
 }
